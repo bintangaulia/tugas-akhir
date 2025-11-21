@@ -17,7 +17,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <div  id="app" class="vh-100 d-flex justify-content-center align-items-center bg-primary bg-opacity-25">
+    <div  id="app" class="vh-100 d-flex justify-content-center align-items-center bg-info">
 
         <main class="col-6">
             @yield('content')
