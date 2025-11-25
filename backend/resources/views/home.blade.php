@@ -18,7 +18,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-primary w-100 py-2 mb-3">Artikel</span>
+                        <span class="badge bg-primary w-100 py-2 mb-3 rounded-4">Artikel</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
@@ -37,7 +37,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-primary w-100 py-2 mb-3">Artikel</span>
+                        <span class="badge bg-primary w-100 py-2 mb-3 rounded-4">Artikel</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
@@ -56,7 +56,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-success w-100 py-2 mb-3">Video</span>
+                        <span class="badge bg-success w-100 py-2 mb-3 rounded-4">Video</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
@@ -75,7 +75,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-success w-100 py-2 mb-3">Video</span>
+                        <span class="badge bg-success w-100 py-2 mb-3 rounded-4">Video</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
@@ -94,7 +94,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-primary w-100 py-2 mb-3">Artikel</span>
+                        <span class="badge bg-primary w-100 py-2 mb-3 rounded-4">Artikel</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
@@ -113,7 +113,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-primary w-100 py-2 mb-3">Artikel</span>
+                        <span class="badge bg-primary w-100 py-2 mb-3 rounded-4">Artikel</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
@@ -132,7 +132,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-primary w-100 py-2 mb-3">Artikel</span>
+                        <span class="badge bg-primary w-100 py-2 mb-3 rounded-4">Artikel</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
@@ -151,7 +151,7 @@
                 <div class="card h-100 shadow-sm border-0 rounded-3">
                     <img class="border-0 rounded-2" src="{{ asset('template') }}/assets/img/le.jpg" alt="" width="100%">
                     <div class="card-body">
-                        <span class="badge bg-primary w-100 py-2 mb-3">Artikel</span>
+                        <span class="badge bg-primary w-100 py-2 mb-3 rounded-4">Artikel</span>
                         <div class="d-flex align-items-center text-muted small mb-2">
                             <span class="me-3">👤 Administrator</span>
                             <span>📅 06 April, 2022</span>
