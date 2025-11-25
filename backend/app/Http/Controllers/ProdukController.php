@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ProdukController extends Controller
 {
-    public $pageTitle = "Data Produk";
+    public $pageTitle = "Data";
     public function index()
     {
         $query = Produk::query();

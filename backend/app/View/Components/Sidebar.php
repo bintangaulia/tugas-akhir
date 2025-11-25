@@ -15,13 +15,13 @@ class Sidebar extends Component
     public function __construct()
     {
         $this->links = [
-            // [
-            //     'label' => 'Dashboard Analitik',
-            //     'route' => 'home',
-            //     'is_active' => request()->routeIs('home'),
-            //     'icon' => 'fas fa-chart-line',
-            //     'is_dropdown' => false
-            // ],
+            [
+                'label' => 'Dashboard Analitik',
+                'route' => 'home',
+                'is_active' => request()->routeIs('home'),
+                'icon' => 'fas fa-chart-line',
+                'is_dropdown' => false
+            ],
             [
                 'label' => 'Master Data',
                 'route' => '#',
