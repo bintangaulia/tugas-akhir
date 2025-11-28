@@ -29,7 +29,7 @@ class UniversityDashboardApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           elevation: 0,
-          iconTheme: IconThemeData(color: _primaryColorValue), 
+          iconTheme: IconThemeData(color: Color.fromARGB(255, 26, 75, 160)), 
         ),
         
         useMaterial3: true, 
