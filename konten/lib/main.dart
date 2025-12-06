@@ -1,13 +1,17 @@
-import 'package:flutter/material.dart';
-// Sesuaikan import sesuai struktur folder/file Anda: lib/screen/screen.dart
-import 'screen/screen.dart'; 
+// lib/main.dart
 
-// --- DEFINISI NILAI WARNA UTAMA ---
-const Color _primaryColorValue = Color(0xFF133E87); // #133E87
+import 'package:flutter/material.dart';
+// Ganti 'konten' dengan nama proyek Anda jika berbeda
+import 'package:konten/screen/screen.dart';
+import 'package:konten/screen/news_screen.dart';
 
 void main() {
   runApp(const UniversityDashboardApp());
 }
+
+// Definisikan Nilai Warna Utama agar bisa diakses di semua widget
+const Color primaryColorValue = Color(0xFF133E87); // Biru Tua
+const Color accentColorValue = Color(0xFF608BC1); // Biru Muda
 
 class UniversityDashboardApp extends StatelessWidget {
   const UniversityDashboardApp({super.key});
@@ -18,25 +22,28 @@ class UniversityDashboardApp extends StatelessWidget {
       title: 'Dashboard Akademik',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // Menggunakan ColorScheme untuk theming modern
+        // Set background utama agar konsisten dengan desain
+        scaffoldBackgroundColor: Colors.grey[50],
         colorScheme: ColorScheme.fromSeed(
-          seedColor: _primaryColorValue, 
-        ).copyWith(
-          primary: _primaryColorValue, 
+          seedColor: primaryColorValue,
+          primary: primaryColorValue,
+          secondary: accentColorValue,
         ),
-        
-        // Pengaturan AppBar
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           elevation: 0,
-          iconTheme: IconThemeData(color: Color.fromARGB(255, 26, 75, 160)), 
+          iconTheme: IconThemeData(color: primaryColorValue),
         ),
-        
-        useMaterial3: true, 
+        useMaterial3: true,
       ),
-      
-      // Panggil widget dari file screen.dart
-      home: const DashboardScreen(), 
+
+      // Menggunakan rute bernama
+      initialRoute: '/',
+      routes: {
+        '/': (context) =>
+            const DashboardScreen(), // Dashboard adalah halaman utama
+        '/news': (context) => const NewsScreen(), // Rute Berita
+      },
     );
   }
 }
