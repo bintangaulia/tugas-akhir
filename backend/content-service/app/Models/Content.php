@@ -12,6 +12,6 @@ class Content extends Model
         'type',
         'target_role',
         'target_prodi',
-        'url'
+        'url',
     ];
 }

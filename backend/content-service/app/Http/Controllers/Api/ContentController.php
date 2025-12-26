@@ -8,12 +8,27 @@ use Illuminate\Http\Request;
 
 class ContentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json([
-            'status' => true,
-            'data' => Content::all()
-        ]);
+        $user = $request->user;
+
+        $query = Content::query();
+
+        if ($user['role']) {
+            $query->where(function ($q) use ($user) {
+                $q->whereNull('target_role')
+                    ->orWhere('target_role', $user['role']);
+            });
+        }
+
+        if ($user['prodi']) {
+            $query->where(function ($q) use ($user) {
+                $q->whereNull('target_prodi')
+                    ->orWhere('target_prodi', $user['prodi']);
+            });
+        }
+
+        return response()->json($query->get());
     }
 
     public function show($id)
@@ -23,6 +38,27 @@ class ContentController extends Controller
             'data' => Content::findOrFail($id)
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        if ($request->user['role'] !== 'admin') {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $content = Content::findOrFail($id);
+
+        $content->update($request->only([
+            'title',
+            'description',
+            'type',
+            'target_role',
+            'target_prodi',
+            'url'
+        ]));
+
+        return response()->json($content);
+    }
+
 
     public function personalized()
     {
@@ -44,12 +80,32 @@ class ContentController extends Controller
 
     public function store(Request $request)
     {
-        $content = Content::create($request->all());
+        if ($request->user['role'] !== 'admin') {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Content created',
-            'data' => $content
-        ], 201);
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'type' => 'required|in:article,video,link',
+            'target_role' => 'required|in:mahasiswa,dosen',
+            'target_prodi' => 'required|string',
+            'url' => 'nullable|string',
+        ]);
+
+        $content = Content::create($validated);
+
+        return response()->json($content, 201);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        if ($request->user['role'] !== 'admin') {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        Content::findOrFail($id)->delete();
+
+        return response()->json(['message' => 'Deleted']);
     }
 }
