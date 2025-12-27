@@ -1,39 +1,49 @@
-// lib/screen/video_list_screen.dart
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'screen.dart'; // Import warna
-import 'video_player_screen.dart'; // Import halaman detail untuk navigasi
+import 'package:http/http.dart' as http;
+import 'screen.dart'; // Import warna (primaryColor)
+import 'video_player_screen.dart'; // Import navigasi
 
-class VideoListScreen extends StatelessWidget {
+class VideoListScreen extends StatefulWidget {
   const VideoListScreen({super.key});
 
-  // Data Daftar Video Lengkap (Digabung dari data dummy di screen.dart)
-  final List<Map<String, String>> allVideos = const [
-    {
-      'title': 'Wawancara Eksklusif: Tren AI di Dunia Pendidikan',
-      'source': 'Media Kampus',
-      'time': '1 Jam Lalu',
-      'icon': 'video',
-    },
-    {
-      'title': 'Tutorial Singkat: Instalasi Flutter di MacOS',
-      'source': 'Lab Komputer',
-      'time': '2 Hari Lalu',
-      'icon': 'video',
-    },
-    {
-      'title': 'Webinar: Keamanan Jaringan Era Cloud Computing',
-      'source': 'Pusat Keilmuan',
-      'time': '1 Minggu Lalu',
-      'icon': 'video',
-    },
-    {
-      'title': 'Review Perpustakaan Digital Kampus Terbaru',
-      'source': 'Pusat Informasi',
-      'time': '3 Hari Lalu',
-      'icon': 'video',
-    },
-  ];
+  @override
+  State<VideoListScreen> createState() => _VideoListScreenState();
+}
+
+class _VideoListScreenState extends State<VideoListScreen> {
+  List<dynamic> allVideos = [];
+  bool isLoading = true;
+
+  // --- FUNGSI AMBIL DATA DARI API ---
+  Future<void> fetchVideos() async {
+    // Ganti URL ini dengan endpoint API Video milikmu
+    final url = Uri.parse("https://domainkamu.com/api/videos"); 
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final decodedData = jsonDecode(response.body);
+        setState(() {
+          // Sesuaikan 'data' jika API kamu membungkus list dalam key tertentu
+          allVideos = decodedData is List ? decodedData : decodedData['data'];
+          isLoading = false;
+        });
+      } else {
+        throw Exception("Gagal memuat video");
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      print("Error fetching videos: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchVideos(); // Jalankan saat layar dibuka
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,76 +54,69 @@ class VideoListScreen extends StatelessWidget {
           style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: primaryColor),
+          icon: Icon(Icons.arrow_back, color: primaryColor), // Gunakan primaryColor
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.white,
         elevation: 1,
       ),
-      body: ListView.builder(
-        itemCount: allVideos.length,
-        itemBuilder: (context, index) {
-          final item = allVideos[index];
-          return InkWell(
-            // Tambahkan InkWell untuk klik
-            onTap: () {
-              // Navigasi ke halaman pemutar video saat item diklik
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VideoPlayerScreen(videoItem: item),
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.play_circle_outline,
-                    color: primaryColor,
-                    size: 30,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator()) // Tampilkan loading
+          : ListView.builder(
+              itemCount: allVideos.length,
+              itemBuilder: (context, index) {
+                final item = allVideos[index];
+                return InkWell(
+                  onTap: () {
+                    // Navigasi ke pemutar video
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VideoPlayerScreen(
+                          videoItem: {
+                            'title': item['title']?.toString() ?? '',
+                            'source': item['source']?.toString() ?? '',
+                            'time': item['time']?.toString() ?? item['date']?.toString() ?? '',
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          item['title']!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
+                        Icon(Icons.play_circle_outline, color: primaryColor, size: 30),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['title'] ?? '',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${item['source'] ?? ''} • ${item['time'] ?? item['date'] ?? ''}',
+                                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${item['source']} • ${item['time']}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
                       ],
                     ),
                   ),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

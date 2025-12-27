@@ -1,119 +1,85 @@
-// lib/screen/article_list_screen.dart
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'screen.dart'; // Import warna
-import 'article_detail_screen.dart'; // Import halaman detail untuk navigasi
+import 'package:http/http.dart' as http;
+import 'article_detail_screen.dart';
+import 'screen.dart';
 
-class ArticleListScreen extends StatelessWidget {
+class ArticleListScreen extends StatefulWidget {
   const ArticleListScreen({super.key});
 
-  // Data Daftar Artikel Lengkap (Digabung dari data dummy di screen.dart)
-  final List<Map<String, String>> allArticles = const [
-    {
-      'title': 'Kiat Sukses Menyusun Proposal Penelitian yang Efektif',
-      'source': 'Jurnal Akademik',
-      'time': '12 Jam Lalu',
-      'icon': 'article',
-    },
-    {
-      'title': 'Jadwal dan Syarat Pendaftaran Program Magang Industri',
-      'source': 'Bagian Kemahasiswaan',
-      'time': '2 Hari Lalu',
-      'icon': 'article',
-    },
-    {
-      'title': 'Pentingnya Etika Data dalam Penelitian Ilmiah Modern',
-      'source': 'Pusat Riset',
-      'time': '5 Hari Lalu',
-      'icon': 'article',
-    },
-    {
-      'title': 'Tips Mengelola Stres Akademik Selama Masa Ujian Akhir',
-      'source': 'Biro Konseling',
-      'time': '1 Minggu Lalu',
-      'icon': 'article',
-    },
-  ];
+  @override
+  State<ArticleListScreen> createState() => _ArticleListScreenState();
+}
+
+class _ArticleListScreenState extends State<ArticleListScreen> {
+  List articles = [];
+  bool isLoading = true;
+
+  // lib/screen/article_list_screen.dart
+
+  Future<void> fetchArticles() async {
+    final url = Uri.parse(
+      'https://domainkamu.com/api/articles',
+    ); // Pastikan URL ini benar
+    try {
+      final res = await http.get(url);
+      if (res.statusCode == 200) {
+        final decoded = jsonDecode(res.body);
+
+        setState(() {
+          // Jika API kamu formatnya { "data": [...] } gunakan decoded['data']
+          // Jika API kamu langsung [...] gunakan decoded
+          articles = decoded is List ? decoded : decoded['data'];
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error Fetch Artikel: $e");
+      setState(() => isLoading = false);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchArticles();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Daftar Semua Artikel',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: primaryColor),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        title: const Text('Artikel'),
         backgroundColor: Colors.white,
-        elevation: 1,
       ),
-      body: ListView.builder(
-        itemCount: allArticles.length,
-        itemBuilder: (context, index) {
-          final item = allArticles[index];
-          return InkWell(
-            // Tambahkan InkWell untuk klik
-            onTap: () {
-              // Navigasi ke halaman detail saat item diklik
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ArticleDetailScreen(articleItem: item),
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.description_outlined,
-                    color: primaryColor,
-                    size: 30,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item['title']!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: articles.length,
+              itemBuilder: (context, i) {
+                final item = articles[i];
+                return ListTile(
+                  title: Text(item['title']),
+                  subtitle: Text(item['source']),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ArticleDetailScreen(
+                          articleItem: {
+                            'title': item['title'],
+                            'source': item['source'],
+                            'time': item['time'],
+                            'content': item['content'],
+                          },
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${item['source']} • ${item['time']}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
-                ],
-              ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

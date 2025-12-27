@@ -1,9 +1,11 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
-// Ganti 'konten' dengan nama proyek Anda jika berbeda
 import 'package:konten/screen/screen.dart';
 import 'package:konten/screen/news_screen.dart';
+import 'package:konten/screen/article_list_screen.dart';
+import 'package:konten/screen/video_list_screen.dart';
+
 
 void main() {
   runApp(const UniversityDashboardApp());
@@ -40,9 +42,10 @@ class UniversityDashboardApp extends StatelessWidget {
       // Menggunakan rute bernama
       initialRoute: '/',
       routes: {
-        '/': (context) =>
-            const DashboardScreen(), // Dashboard adalah halaman utama
-        '/news': (context) => const NewsScreen(), // Rute Berita
+        '/': (context) => const DashboardScreen(),
+        '/news': (context) => const NewsScreen(),
+        '/articles': (context) => const ArticleListScreen(),
+        '/videos': (context) => const VideoListScreen(),
       },
     );
   }
