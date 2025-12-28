@@ -346,63 +346,70 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: ValueListenableBuilder(
-        valueListenable: _searchQuery,
-        builder: (context, query, child) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                if (query.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: quickCategories.map((cat) => Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (cat['label'] == 'Berita') Navigator.pushNamed(context, '/news');
-                              if (cat['label'] == 'Artikel') Navigator.pushNamed(context, '/articles');
-                              if (cat['label'] == 'Video') Navigator.pushNamed(context, '/videos');
-                            },
-                            child: CircleAvatar(radius: 28, backgroundColor: Colors.white, child: Icon(cat['icon'], color: primaryColor)),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(cat['label'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                        ],
-                      )).toList(),
+ @override
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      _buildAppBar(), // AppBar custom kamu
+      Expanded(
+        child: ValueListenableBuilder(
+          valueListenable: _searchQuery,
+          builder: (context, query, child) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  if (query.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: quickCategories.map((cat) => Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (cat['label'] == 'Berita') {
+                                  Navigator.pushNamed(context, '/news');
+                                }
+                                if (cat['label'] == 'Artikel') {
+                                  Navigator.pushNamed(context, '/articles');
+                                }
+                                if (cat['label'] == 'Video') {
+                                  Navigator.pushNamed(context, '/videos');
+                                }
+                              },
+                              child: CircleAvatar(
+                                radius: 28,
+                                backgroundColor: Colors.white,
+                                child: Icon(cat['icon'], color: primaryColor),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              cat['label'],
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )).toList(),
+                      ),
                     ),
-                  ),
-                if (query.isEmpty) const SizedBox(height: 30),
-                _buildHorizontalCardList(query),
-                const SizedBox(height: 30),
-                _buildVerticalContentList('Video Terkini', latestVideos, query),
-                _buildVerticalContentList('Artikel Terkini', latestArticles, query),
-                if (query.isNotEmpty && 
-                    _filterData(favoriteContent, query, (i) => i['title']!).isEmpty &&
-                    _filterData(latestVideos, query, (i) => i['title']!).isEmpty &&
-                    _filterData(latestArticles, query, (i) => i['title']!).isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(40.0),
-                    child: Column(
-                      children: [
-                        Icon(Icons.search_off, size: 60, color: Colors.grey[400]),
-                        const SizedBox(height: 10),
-                        Text("Data '$query' tidak ditemukan", style: const TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 40),
-              ],
-            ),
-          );
-        },
+
+                  const SizedBox(height: 30),
+                  _buildHorizontalCardList(query),
+                  const SizedBox(height: 30),
+                  _buildVerticalContentList('Video Terkini', latestVideos, query),
+                  _buildVerticalContentList('Artikel Terkini', latestArticles, query),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            );
+          },
+        ),
       ),
-    );
-  }
+    ],
+  );
+}
 }

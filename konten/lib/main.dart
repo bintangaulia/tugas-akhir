@@ -5,8 +5,7 @@ import 'package:konten/screen/screen.dart';
 import 'package:konten/screen/news_screen.dart';
 import 'package:konten/screen/article_list_screen.dart';
 import 'package:konten/screen/video_list_screen.dart';
-
-
+import 'package:konten/screen/main_wrapper.dart';
 void main() {
   runApp(const UniversityDashboardApp());
 }
@@ -42,7 +41,8 @@ class UniversityDashboardApp extends StatelessWidget {
       // Menggunakan rute bernama
       initialRoute: '/',
       routes: {
-        '/': (context) => const DashboardScreen(),
+        '/': (context) =>
+            MainWrapper(role: 'mahasiswa', nama: 'Bintang', nis: '123456'),
         '/news': (context) => const NewsScreen(),
         '/articles': (context) => const ArticleListScreen(),
         '/videos': (context) => const VideoListScreen(),
