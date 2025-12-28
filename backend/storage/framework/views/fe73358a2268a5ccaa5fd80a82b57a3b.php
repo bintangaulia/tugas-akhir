@@ -1,0 +1,3 @@
+<div class="">
+    <input type="text" name="<?php echo e($term); ?>" id="<?php echo e($term); ?>" class="form-control" placeholder="<?php echo e($placeholder); ?>" value="<?php echo e(request($term)); ?>" onkeydown="if(event.key === 'Enter'){window.location.href = '?<?php echo e($term); ?>=' + this.value}" class="col-12 col-md-6">
+</div><?php /**PATH C:\INFORMATIKA\Semester5\tugas-akhir\backend\resources\views/components/filter-by-field.blade.php ENDPATH**/ ?>
