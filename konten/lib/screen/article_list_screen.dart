@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import '../services/api_service.dart';
+import '../models/article_model.dart';
 import 'article_detail_screen.dart';
 import 'screen.dart';
 
@@ -12,37 +12,13 @@ class ArticleListScreen extends StatefulWidget {
 }
 
 class _ArticleListScreenState extends State<ArticleListScreen> {
-  List articles = [];
-  bool isLoading = true;
-
-  // lib/screen/article_list_screen.dart
-
-  Future<void> fetchArticles() async {
-    final url = Uri.parse(
-      'https://domainkamu.com/api/articles',
-    ); // Pastikan URL ini benar
-    try {
-      final res = await http.get(url);
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-
-        setState(() {
-          // Jika API kamu formatnya { "data": [...] } gunakan decoded['data']
-          // Jika API kamu langsung [...] gunakan decoded
-          articles = decoded is List ? decoded : decoded['data'];
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      debugPrint("Error Fetch Artikel: $e");
-      setState(() => isLoading = false);
-    }
-  }
+  final ApiService _apiService = ApiService();
+  late Future<List<Article>> _articlesFuture;
 
   @override
   void initState() {
     super.initState();
-    fetchArticles();
+    _articlesFuture = _apiService.fetchArticles();
   }
 
   @override
@@ -51,35 +27,59 @@ class _ArticleListScreenState extends State<ArticleListScreen> {
       appBar: AppBar(
         title: const Text('Artikel'),
         backgroundColor: Colors.white,
+        foregroundColor: primaryColor,
+        elevation: 1,
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: articles.length,
-              itemBuilder: (context, i) {
-                final item = articles[i];
-                return ListTile(
-                  title: Text(item['title']),
-                  subtitle: Text(item['source']),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ArticleDetailScreen(
-                          articleItem: {
-                            'title': item['title'],
-                            'source': item['source'],
-                            'time': item['time'],
-                            'content': item['content'],
-                          },
-                        ),
+      body: FutureBuilder<List<Article>>(
+        future: _articlesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Terjadi kesalahan\n${snapshot.error}',
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
+          final articles = snapshot.data!;
+
+          if (articles.isEmpty) {
+            return const Center(child: Text('Artikel belum tersedia'));
+          }
+
+          return ListView.builder(
+            itemCount: articles.length,
+            itemBuilder: (context, index) {
+              final article = articles[index];
+              return ListTile(
+                title: Text(article.title),
+                subtitle: Text(article.author),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ArticleDetailScreen(
+                        articleItem: {
+                          'title': article.title,
+                          'source': article.author,
+                          'time': article.createdAt,
+                          'content': article.content,
+                        },
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
